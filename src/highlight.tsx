@@ -4,10 +4,10 @@ import { readwiseRequest } from "./util/readwise";
 import { useOpenGraph } from "./util/scraper";
 
 type Values = {
-  url: string;
+  text: string;
+  source_url: string;
   title: string;
-  summary: string;
-  tags: string;
+  note: string;
 };
 
 function blankStringToUndef(str: string): string | undefined {
@@ -19,13 +19,17 @@ export default function Command() {
   const og = useOpenGraph(url.url);
 
   function handleSubmit(body: Values) {
-    readwiseRequest("/v3/save", "POST", {
-      url: body.url,
-      title: blankStringToUndef(body.title),
-      summary: blankStringToUndef(body.summary),
-      tags: body.tags ? body.tags.split(", ") : undefined,
+    readwiseRequest("/v2/highlights", "POST", {
+      highlights: [
+        {
+          text: body.text,
+          source_url: body.source_url,
+          title: blankStringToUndef(body.title),
+          note: blankStringToUndef(body.note),
+        },
+      ],
     }).then(() => {
-      showHUD("Bookmark created");
+      showHUD("Highlight created");
       popToRoot();
     });
   }
@@ -43,23 +47,15 @@ export default function Command() {
         </ActionPanel>
       }
     >
+      <Form.TextArea id="text" title="Highlight text" />
       <Form.TextField
-        id="url"
+        id="source_url"
         title="URL"
         defaultValue={url.url}
         error={url.error}
       />
-      <Form.TextField id="tags" title="Tags" />
       <Form.TextField id="title" title="Title" defaultValue={url.title} />
-      {!!og && (
-        <>
-          <Form.TextArea
-            id="summary"
-            title="Description"
-            defaultValue={og.description}
-          />
-        </>
-      )}
+      <Form.TextField id="note" title="Note" />
     </Form>
   );
 }

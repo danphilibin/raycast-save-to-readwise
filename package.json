@@ -19,6 +19,12 @@
       "title": "Save current page to Readwise",
       "description": "Save current page to Readwise",
       "mode": "view"
+    },
+    {
+      "name": "highlight",
+      "title": "Save highlight to Readwise",
+      "description": "Save a highlight to Readwise",
+      "mode": "view"
     }
   ],
   "preferences": [

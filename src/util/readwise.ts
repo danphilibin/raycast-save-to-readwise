@@ -8,7 +8,7 @@ export async function readwiseRequest(
 ) {
   const key = getPreference("readwiseToken");
 
-  const res = await fetch(`https://readwise.io/api/v3${url}`, {
+  const res = await fetch(`https://readwise.io/api${url}`, {
     method: method ?? "GET",
     headers: {
       Authorization: `Token ${key}`,
